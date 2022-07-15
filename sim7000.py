@@ -3,9 +3,11 @@ import os
 from serialCom import *
 from datetime import datetime
 
-# Deppending on the carrier 
+
+# If there is no CAT-M and NB-Iot avaliable GPRS is used
+# There is no way to get the APN using GPRS
 APN = "internet.movistar.com.co" 
-# 
+# Deppending on the carrier 
 
 # Mosquitto.org Settings
 MQTT_URL="test.mosquitto.org"
@@ -14,31 +16,44 @@ CA_NAME = 'mosquitto-ca.crt'
 CERT_NAME = "mosquitto.crt"
 KEY_NAME = "mosquitto.key"
 
-############################### usefull commands ##################################
+################### Genral Use COMANDS ########################
 # Restart board
 if "--reboot" in sys.argv:
     AT('+CFUN=1,1', timeout=30, success="*PSUTTZ") 
+# Preferred Mode Selection
+# AT('+CNMP=2')   # Automatic
+# AT('+CNMP=13')  # GSM only
+# AT('+CNMP=38')  # LTE only
+# AT('+CNMP=51')  # GSM and LTE only 
 
-# # AT('+CMNB=3') # Set preference for nb-iot (doesn't work with nb-iot)
+# Set preference for nb-iot between CAT-M and NB-Iot
+# AT('+CMNB=1')  # CAT-M
+# AT('+CMNB=2')  # NB-Iot  
+# AT('+CMNB=3')  # CAT-M and NB-Iot
 # AT() # Check modem is responding
 # AT("+CMEE=2") # Set debug level
-# # Hardware Info
+# Hardware Info
+
+# AT("+CBATCHK?") # Check VBAT on/off
+# AT("+CBATCHK=1") # Check VBAT off
+# AT("+CBATCHK?") # Check VBAT on
+
 # AT("+CPIN?") # Check sim card is present and active
 # AT("+CGMM") # Check module name
 # AT("+CGMR") # Firmware version
 # AT('+GSN') # Get IMEI number
 # AT('+CCLK?') # Get system time
-# # Signal info
+# Signal info
 # AT("+COPS?") # Check opertaor info
 # AT("+CSQ") # Get signal strength
 # AT('+CPSI?') # Get more detailed signal info
 # AT('+CBAND?') # Get band
-# # GPRS info
+# GPRS info
 # AT("+CGREG?") # Get network registration status
 # AT("+CGACT?") # Show PDP context state
 # AT('+CGPADDR') # Show PDP address
 # cgcontrdp = AT("+CGCONTRDP") # Get APN and IP address
-# # Check nb-iot Status
+# Check nb-iot Status
 # AT('+CGNAPN')
 
 
