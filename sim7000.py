@@ -6,8 +6,8 @@ from datetime import datetime
 
 CMD_LINEBREAK = b'\r\n'
 
-PORT = "/dev/ttyUSB0"
-BAUD = 9600
+PORT = "COM3"
+BAUD = 115200
 
 # Mosquitto.org Settings
 MQTT_URL="test.mosquitto.org"
@@ -58,42 +58,39 @@ def AT(cmd="", timeout=10, success="OK", failure="+CME ERROR"):
 if "--reboot" in sys.argv:
     AT('+CFUN=1,1', timeout=30, success="*PSUTTZ")
 
-# AT('+CMNB=3') # Set preference for nb-iot (doesn't work with nb-iot)
-AT() # Check modem is responding
-AT("+CMEE=2") # Set debug level
-# Hardware Info
-AT("+CPIN?") # Check sim card is present and active
-AT("+CGMM") # Check module name
-AT("+CGMR") # Firmware version
-AT('+GSN') # Get IMEI number
-AT('+CCLK?') # Get system time
-# Signal info
-AT("+COPS?") # Check opertaor info
-AT("+CSQ") # Get signal strength
-AT('+CPSI?') # Get more detailed signal info
-AT('+CBAND?') # Get band
-# GPRS info
-AT("+CGREG?") # Get network registration status
-AT("+CGACT?") # Show PDP context state
-AT('+CGPADDR') # Show PDP address
-cgcontrdp = AT("+CGCONTRDP") # Get APN and IP address
-# Check nb-iot Status
-AT('+CGNAPN')
+# # AT('+CMNB=3') # Set preference for nb-iot (doesn't work with nb-iot)
+# AT() # Check modem is responding
+# AT("+CMEE=2") # Set debug level
+# # Hardware Info
+# AT("+CPIN?") # Check sim card is present and active
+# AT("+CGMM") # Check module name
+# AT("+CGMR") # Firmware version
+# AT('+GSN') # Get IMEI number
+# AT('+CCLK?') # Get system time
+# # Signal info
+# AT("+COPS?") # Check opertaor info
+# AT("+CSQ") # Get signal strength
+# AT('+CPSI?') # Get more detailed signal info
+# AT('+CBAND?') # Get band
+# # GPRS info
+# AT("+CGREG?") # Get network registration status
+# AT("+CGACT?") # Show PDP context state
+# AT('+CGPADDR') # Show PDP address
+# cgcontrdp = AT("+CGCONTRDP") # Get APN and IP address
+# # Check nb-iot Status
+# AT('+CGNAPN')
 
-APN = cgcontrdp[1][0].split(",")[2]
-IP = cgcontrdp[1][0].split(",")[3]
+APN = "internet.movistar.com.co"
 
 ############################### PING/NTP ##################################
 
 # Ping - works :-)
 if sys.argv[1] == "ping":
     print("++++++++++++++++++++ PING +++++++++++++++++++++\n")
-    cstt = AT('+CSTT?')
-    if APN not in cstt[1][0]:
-        AT('+CSTT="{}"'.format(APN))
-        AT('+CIICR')
-    AT('+CIFSR', success=IP)
-    AT('+CIPPING="www.google.com.au"')
+    AT('+CSTT="{}"'.format(APN))
+    AT('+CIICR')
+    AT('+CIFSR')
+    AT('+CIPPING="www.google.com"')
 
 # Get NTP time - working :-)
 if sys.argv[1] == "ntp":
