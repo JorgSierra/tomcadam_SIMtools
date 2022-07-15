@@ -17,7 +17,7 @@ KEY_NAME = "mosquitto.key"
 ############################### usefull commands ##################################
 # Restart board
 if "--reboot" in sys.argv:
-    AT('+CFUN=1,1', timeout=30, success="*PSUTTZ")
+    AT('+CFUN=1,1', timeout=30, success="*PSUTTZ") 
 
 # # AT('+CMNB=3') # Set preference for nb-iot (doesn't work with nb-iot)
 # AT() # Check modem is responding
